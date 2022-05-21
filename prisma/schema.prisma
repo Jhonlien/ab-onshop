@@ -10,10 +10,61 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
 model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
+  id    String     @id @default(uuid())
+  phone  String @unique
+
+  @@map("users")
 }
+
+model Product {
+  id            String              @id @default(uuid())
+  name          String
+  price         BigInt
+  desc          String
+  createdAt     DateTime            @default(now())
+  updatedAt     DateTime            @updatedAt
+  productImage  ProductImage[]
+  productStock  ProductStock[]
+
+  category      ProductCategory     @relation(fields: [categoryId], references: [id])
+  categoryId    String               @map("category_id")
+  
+  @@map("products")
+}
+
+model ProductImage { 
+  id          Int         @id @default(autoincrement())
+  file        String
+  createdAt   DateTime    @default(now())
+  updateAt    DateTime    @updatedAt
+  product     Product     @relation(fields: [productId], references: [id])
+  productId   String      @map("product_id")
+  @@map("product_images")
+}
+
+
+model ProductStock { 
+  id              Int           @id @default(autoincrement())
+  color           String        
+  size            String
+  stock           Int 
+
+  product         Product     @relation(fields: [productId], references: [id])
+  productId       String      @map("product_id")
+
+
+  @@map("product_stocks")
+}
+
+model ProductCategory {
+  id              String     @id @default(uuid())
+  name            String
+  product         Product?
+  @@map("product_categories")
+}
+
+
+
+
 
