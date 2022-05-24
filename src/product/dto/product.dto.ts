@@ -1,5 +1,5 @@
 import { Type } from "class-transformer";
-import { IsNotEmpty, IsNumber,  IsString, IsArray, ValidateNested, ArrayMinSize } from "class-validator";
+import { IsNotEmpty, IsNumber,  IsString, IsArray, ValidateNested, ArrayMinSize, IsUUID } from "class-validator";
 import { ProductStockDto } from "./product-stock.dto";
 
 export class ProductDto {
@@ -13,11 +13,15 @@ export class ProductDto {
 
   @IsNumber()
   @IsNotEmpty()
-  price : string
+  price : number
+
+  @IsUUID()
+  @IsNotEmpty()
+  category_id : string
 
   @IsArray()
   @ValidateNested({ each: true })
   @ArrayMinSize(1)
   @Type(() => ProductStockDto)
-  products_stocks : ProductStockDto[]
+  product_stock : ProductStockDto[]
 }

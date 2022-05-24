@@ -5,18 +5,12 @@ export class ProductStockDto {
   @IsNotEmpty()
   color : string
   
-
   @IsString()
   @IsNotEmpty()
   size : string
   
   @IsNumber()
   @IsNotEmpty()
-  stock : string
-
-
-  @IsUUID()
-  @IsNotEmpty()
-  product_id : string
+  stock : number
 
 }
