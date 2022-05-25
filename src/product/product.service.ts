@@ -2,7 +2,7 @@ import { HttpCode, HttpStatus, Injectable, Post, UnprocessableEntityException } 
 import { Product } from '@prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { ProductDto } from './dto';
-import { ProductQuery } from './query';
+import { ProductIdQuery, ProductQuery } from './query';
 
 @Injectable()
 export class ProductService {
@@ -40,7 +40,21 @@ export class ProductService {
       products,
       pagination
     }
+  }
 
+  async getProductById(query: ProductIdQuery) {
+    const product = await this.prisma.product.findUnique({
+      where : {
+        id : query.id
+      },
+      include : {
+        category : true,
+        product_image : true,
+        product_stock : true
+      }
+    })
+
+    return product
   }
 
   
