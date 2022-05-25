@@ -32,6 +32,7 @@ export class ProductService {
       take : limit,
       include : {
         category : true,
+        product_image : true,
         product_stock : true
       }
     })
@@ -81,6 +82,68 @@ export class ProductService {
       throw new UnprocessableEntityException(error)
     }
   }
+
+  async updateProduct(data: ProductDto, query: ProductIdQuery) {
+
+    // const product = await this.prisma.product.update({
+    //   where : {
+    //     id : query.id
+    //   },
+    //   data : {
+    //     ...data,
+    //     product_stock : {
+    //       connect : {
+    //         id: data.product_stock
+    //       }
+    //     }
+    //   },
+    //   include : {
+    //     category : true,
+    //     product_image  : true,
+    //     product_stock : true
+    //   }
+    // })
+
+    // return product
+  }
+
+
+  async uploadImages(files : {file : Express.Multer.File[]}, productId : ProductIdQuery) {
+    files.file.map(async (e, i) => {
+      await this.prisma.productImage.create({
+        data: {
+          productId : productId.id,
+          file : e.path
+        }
+      })
+    })
+
+    const products = this.prisma.product.findUnique({
+      where : {
+        id  : productId.id
+      },
+      include : {
+        product_image : true,
+        product_stock : true
+      }
+    })
+
+    return products
+  }
+
+  async deleteProduct(query : ProductIdQuery) {
+    const product = await this.prisma.product.delete({
+      where : {
+        id : query.id,
+      },
+      include : {
+        product_image : true,
+        product_stock : true
+      }
+    })
+
+    return product
+  } 
 
   async countProduct() : Promise<number> {
     const count = await this.prisma.product.count({})

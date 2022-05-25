@@ -25,3 +25,7 @@ export class ProductDto {
   @Type(() => ProductStockDto)
   product_stock : ProductStockDto[]
 }
+
+export class updateProductDto {
+  
+}
