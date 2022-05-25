@@ -1,7 +1,6 @@
 import { Controller, HttpCode, Post, HttpStatus, Body, Get, Query, Delete, Put, UseInterceptors, UploadedFile, UploadedFiles } from '@nestjs/common';
 import { FileFieldsInterceptor, FileInterceptor } from '@nestjs/platform-express';
 import { Helper } from 'common/helpers';
-import { query } from 'express';
 import { diskStorage } from 'multer';
 import { ProductDto } from './dto';
 import { ProductService } from './product.service';

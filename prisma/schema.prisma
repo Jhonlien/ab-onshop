@@ -62,6 +62,7 @@ model ProductStock {
 model ProductCategory {
   id              String     @id @default(uuid())
   name            String
+  file            String
 
   product         Product[]
   

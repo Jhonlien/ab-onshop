@@ -1,5 +1,8 @@
-import { Controller, Get, HttpCode, HttpStatus, Post, Body, Delete, Query, Param } from '@nestjs/common';
+import { Controller, Get, HttpCode, HttpStatus, Post, Body, Delete, Query, Param, UseInterceptors, UploadedFile } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { throws } from 'assert';
+import { Helper } from 'common/helpers';
+import { diskStorage } from 'multer';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CategoryService } from './category.service';
 import { CategoryDto } from './dto';
@@ -26,8 +29,19 @@ export class CategoryController {
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  createCategory(@Body() dto : CategoryDto) {
-    return this.categoryService.createCategory(dto)
+  @UseInterceptors(
+    FileInterceptor(
+      "file", {
+        storage : diskStorage({
+          destination : Helper.destinationPath,
+          filename: Helper.customFileName,
+        }),
+        fileFilter : Helper.fileFilter
+      }
+    )
+  )
+  createCategory(@Body() dto : CategoryDto, @UploadedFile() file : Express.Multer.File) {
+    return this.categoryService.createCategory(dto, file)
   }
 
   @Delete()

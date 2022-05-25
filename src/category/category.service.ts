@@ -30,14 +30,16 @@ export class CategoryService {
   }
 
   async createCategory(
-    dto : CategoryDto
+    dto : CategoryDto,
+    file : Express.Multer.File
     ) : Promise<ProductCategory> {
 
     try {
 
       const category = await this.prisma.productCategory.create({
         data : { 
-          name : dto.category
+          name : dto.category,
+          file : file.path
         }
       })
   
