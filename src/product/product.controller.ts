@@ -1,6 +1,7 @@
-import { Controller, HttpCode, Post, HttpStatus, Body, Get } from '@nestjs/common';
+import { Controller, HttpCode, Post, HttpStatus, Body, Get, Query } from '@nestjs/common';
 import { ProductDto } from './dto';
 import { ProductService } from './product.service';
+import { ProductQuery } from './query';
 
 @Controller('products')
 export class ProductController {
@@ -11,8 +12,8 @@ export class ProductController {
 
   @HttpCode(HttpStatus.OK)
   @Get()
-  getProducts(){
-    return this.productService.getProducts()
+  getProducts(@Query() query : ProductQuery){
+    return this.productService.getProducts(query)
   }
 
   @HttpCode(HttpStatus.CREATED)
