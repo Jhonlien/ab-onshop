@@ -1,8 +1,9 @@
 import { HttpCode, HttpStatus, Injectable, Post, UnprocessableEntityException } from '@nestjs/common';
 import { Product } from '@prisma/client';
+import { Slug } from 'common/helpers';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { ProductDto } from './dto';
-import { ProductIdQuery, ProductQuery } from './query';
+import { ProductCategoryQuery, ProductIdQuery, ProductQuery, ProductSlugQuery } from './query';
 
 @Injectable()
 export class ProductService {
@@ -58,6 +59,37 @@ export class ProductService {
     return product
   }
 
+  async getProductBySlug(query: ProductSlugQuery) {
+    const product = await this.prisma.product.findUnique({
+      where : {
+        slug : query.slug
+      },
+      include : {
+        category : true,
+        product_image : true,
+        product_stock : true
+      }
+    })
+
+    return product
+  }
+
+  async getProductByCategory(query : ProductCategoryQuery){
+    const product = await this.prisma.product.findMany({
+      where : {
+        category : {
+          slug : query.slug
+        }
+      },
+      include : {
+        product_image : true,
+        product_stock : true,
+      }
+    })
+
+    return product
+  }
+
   
   async createProduct(data : ProductDto) : Promise<Product> {
     
@@ -65,6 +97,7 @@ export class ProductService {
       const product = await this.prisma.product.create({
         data  : {
           ...data,
+          slug : Slug.convertToSlug(data.name),
           product_stock : {
             create : data.product_stock
           }

@@ -20,6 +20,7 @@ model User {
 model Product {
   id            String              @id @default(uuid())
   name          String
+  slug          String              @unique
   price         Int
   desc          String
   createdAt     DateTime            @default(now())
@@ -63,7 +64,7 @@ model ProductCategory {
   id              String     @id @default(uuid())
   name            String
   file            String
-
+  slug            String     @unique
   product         Product[]
   
   @@map("product_categories")

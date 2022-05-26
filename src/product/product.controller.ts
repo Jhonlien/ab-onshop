@@ -4,7 +4,7 @@ import { Helper } from 'common/helpers';
 import { diskStorage } from 'multer';
 import { ProductDto } from './dto';
 import { ProductService } from './product.service';
-import { ProductIdQuery, ProductQuery } from './query';
+import { ProductCategoryQuery, ProductIdQuery, ProductQuery, ProductSlugQuery } from './query';
 
 @Controller('products')
 export class ProductController {
@@ -21,8 +21,14 @@ export class ProductController {
 
   @HttpCode(HttpStatus.OK)
   @Get('/details')
-  getProductById(@Query() query : ProductIdQuery){
-    return this.productService.getProductById(query)
+  getProductById(@Query() query : ProductSlugQuery){
+    return this.productService.getProductBySlug(query)
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Get('category')
+  getProductByCategory(@Query() query: ProductCategoryQuery){
+    return this.productService.getProductByCategory(query)
   }
 
   @HttpCode(HttpStatus.CREATED)
